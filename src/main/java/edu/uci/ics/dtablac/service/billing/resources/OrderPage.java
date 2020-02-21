@@ -4,15 +4,15 @@ import com.braintreepayments.http.serializer.Json;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paypal.orders.Item;
+import com.paypal.orders.Order;
 import edu.uci.ics.dtablac.service.billing.core.OrderQuery;
 import edu.uci.ics.dtablac.service.billing.logger.ServiceLogger;
 import edu.uci.ics.dtablac.service.billing.models.base.ItemModel;
 import edu.uci.ics.dtablac.service.billing.models.base.RequestModel;
 import edu.uci.ics.dtablac.service.billing.models.base.ResponseModel;
 import edu.uci.ics.dtablac.service.billing.models.base.Result;
-import edu.uci.ics.dtablac.service.billing.models.data.PayPalOrderClient;
-import edu.uci.ics.dtablac.service.billing.models.data.TokenResponseModel;
-import edu.uci.ics.dtablac.service.billing.models.data.TransactionResponseModel;
+import edu.uci.ics.dtablac.service.billing.models.data.*;
 import edu.uci.ics.dtablac.service.billing.utility.utility;
 
 import javax.ws.rs.*;
@@ -80,6 +80,10 @@ public class OrderPage {
 
             double total_cost = 0.0;
 
+            // Stores temp calculations for discount
+            double discountCost = 0.0;
+            double tempCost = 0.0;
+
             // Update total_cost, as well as add to sale and transaction tables
             OrderQuery OQ = new OrderQuery();
             Date today = new Date(System.currentTimeMillis());
@@ -88,7 +92,11 @@ public class OrderPage {
             for (int i = 0; i < item_count; i++) {
                 ItemModel item = (ItemModel) items[i];
                 item.setSALE_DATE(today.toString());
-                total_cost += item.getQUANTITY() * item.getUNIT_PRICE();
+
+                // Calculate true cost for an item, including discounts and multiple copies.
+                discountCost = item.getDISCOUNT()*item.getUNIT_PRICE();
+                tempCost = item.getQUANTITY() * discountCost;
+                total_cost += tempCost;
 
                 // Make a new entry to 'sale'
                 OQ.sendUpdate(OQ.buildSaleQuery(item.getEMAIL(), item.getMOVIE_ID(),
@@ -150,6 +158,9 @@ public class OrderPage {
         RequestModel requestModel;
         TransactionResponseModel responseModel = null;
 
+        // Transaction list for responseModel
+        ArrayList<TransactionModel> transactions = new ArrayList<TransactionModel>();
+
         // Get order and information about all of a user's transactions
         try {
             requestModel = mapper.readValue(jsonText, RequestModel.class);
@@ -161,21 +172,65 @@ public class OrderPage {
                 return utility.buildHeaderResponse(responseModel, EMAIL, SESSION_ID, TRANSACTION_ID);
             }
 
-            // TODO: query to use email to get token
             // Establish order client to request history of orders by their capture_id
-            //PayPalOrderClient orderClient = new PayPalOrderClient();
+            PayPalOrderClient orderClient = new PayPalOrderClient();
 
             // Store capture_ids to iterate through and grab information for
-            ArrayList<String> capture_ids = new ArrayList<String>();
+            ArrayList<String> order_ids = new ArrayList<String>();
 
             OrderQuery OQ = new OrderQuery();
-            ResultSet RS = OQ.sendEmailToCaptureIDQuery(OQ.buildEmailToCaptureIDQuery(requestModel.getEMAIL()));
+            ResultSet RS = OQ.sendEmailToTokenQuery(OQ.buildEmailToTokenQuery(requestModel.getEMAIL()));
             while (RS.next()) {
-                capture_ids.add(RS.getString("capture_id"));
+                order_ids.add(RS.getString("token"));
             }
 
-            //for (int i = 0; i < capture_ids.)
-            //Json JsonOrder = utility.getOrder();
+            // Iterable array of capture_ids
+            Object[] iterOrderID = order_ids.toArray();
+            int order_id_count = iterOrderID.length;
+
+            // Declare fields for each TransactionModel
+            AmountModel AMOUNT;
+            String AMOUNT_TOTAL;
+            String AMOUNT_CURRENCY;
+
+            TransactionFeeModel TRANSACTION_FEE;
+            String TRANSACTION_VALUE;
+            String TRANSACTION_CURRENCY;
+
+            Object[] ITEMS;
+
+            String CAPTURE_ID;
+            String STATE;
+            String CREATE_TIME;
+            String UPDATE_TIME;
+
+            // Iterate through orders and parse information
+            Order order;
+            for (int i = 0; i < order_id_count; i++) {
+                order = utility.getOrder((String)iterOrderID[i], orderClient);
+                CAPTURE_ID = order.id();
+                STATE = order.status().toLowerCase();
+
+                AMOUNT_TOTAL = order.purchaseUnits().get(0).payments().captures().get(0).amount().value();
+                AMOUNT_CURRENCY = order.purchaseUnits().get(0).payments().captures().get(0).amount().currencyCode();
+                AMOUNT = new AmountModel(AMOUNT_TOTAL, AMOUNT_CURRENCY);
+
+                TRANSACTION_VALUE = order.purchaseUnits().get(0).payments().captures().
+                                        get(0).sellerReceivableBreakdown().paypalFee().value();
+                TRANSACTION_CURRENCY = order.purchaseUnits().get(0).payments().captures().
+                                        get(0).sellerReceivableBreakdown().paypalFee().currencyCode();
+                TRANSACTION_FEE = new TransactionFeeModel(TRANSACTION_VALUE, TRANSACTION_CURRENCY);
+
+                CREATE_TIME = order.purchaseUnits().get(0).payments().captures().get(0).createTime();
+                UPDATE_TIME = order.purchaseUnits().get(0).payments().captures().get(0).updateTime();
+
+                // Get items of this order id
+                ITEMS = utility.getTransactionCartInfo(requestModel, iterOrderID[i].toString());
+
+                TransactionModel transaction = new TransactionModel(CAPTURE_ID, STATE, AMOUNT, TRANSACTION_FEE,
+                                                                    CREATE_TIME, UPDATE_TIME, ITEMS);
+                transactions.add(transaction);
+            }
         }
         catch (IOException e) {
             if (e instanceof JsonParseException) {
@@ -189,9 +244,10 @@ public class OrderPage {
         }
         catch (SQLException e) {
             e.printStackTrace();
-            ServiceLogger.LOGGER.warning("Error checking capture_ids");
+            ServiceLogger.LOGGER.warning("Error checking order_ids");
         }
-        responseModel = new TransactionResponseModel(Result.ORDER_RETRIEVE_SUCCESS, null);
+        Object[] finalTransactions = transactions.toArray();
+        responseModel = new TransactionResponseModel(Result.ORDER_RETRIEVE_SUCCESS, finalTransactions);
         return utility.buildHeaderResponse(responseModel, EMAIL, SESSION_ID, TRANSACTION_ID);
     }
 
@@ -217,14 +273,14 @@ public class OrderPage {
 
             // Capture order and update the transaction record
             String capture_id = utility.captureOrder(TOKEN, orderClient);
+            if (capture_id == null) {
+                throw new Exception();
+            }
+
             utility.updateCaptureID(capture_id, TOKEN);
 
             // Clear customer's cart
             utility.clearCart(TOKEN);
-
-            if (capture_id == null) {
-                throw new Exception();
-            }
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -10,8 +10,15 @@ public class TransactionResponseModel extends ResponseModel {
     private Object[] TRANSACTIONS;
 
     @JsonCreator
-    public TransactionResponseModel(Result result,
+    public TransactionResponseModel(@JsonProperty(value = "resultCode") Integer newRESULTCODE,
+                                    @JsonProperty(value = "message") String newMESSAGE,
                                     @JsonProperty(value = "transactions") Object[] newTransactions) {
+        super(newRESULTCODE, newMESSAGE);
+        this.TRANSACTIONS = newTransactions;
+    }
+
+    @JsonCreator
+    public TransactionResponseModel(Result result, @JsonProperty(value = "transactions") Object[] newTransactions) {
         super(result);
         this.TRANSACTIONS = newTransactions;
     }

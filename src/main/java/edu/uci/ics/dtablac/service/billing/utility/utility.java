@@ -20,6 +20,7 @@ import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -139,7 +140,46 @@ public class utility {
                 unit_price = RS.getFloat("UNIT_PRICE");
                 discount = RS.getFloat("DISCOUNT");
                 ItemModel item = new ItemModel(email, unit_price, discount, quantity, movie_id,
-                                                "N/A", null,null);
+                                                null, null,null);
+                // Title, backdrop, and poster are not required for what the order needs.
+                Items.add(item);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            ServiceLogger.LOGGER.warning("Query failed: Unable to get cart record for order.");
+        }
+        return Items.toArray();
+    }
+
+
+    // Get Transaction item info
+    public static Object[] getTransactionCartInfo(RequestModel requestModel, String TOKEN) {
+        ArrayList<TransactionItemModel> Items = new ArrayList<TransactionItemModel>();
+
+        // ItemModel fields
+        String email;
+        String movie_id;
+        Integer quantity;
+        Float unit_price;
+        Float discount;
+
+        CartQuery CQ = new CartQuery();
+        ResultSet RS = CQ.sendQuery(CQ.buildRetrieveSaleQuery(requestModel.getEMAIL(), TOKEN));
+
+        // Today's date
+        Date today = new Date(System.currentTimeMillis());
+        String date = today.toString();
+
+        try {
+            while (RS.next()) {
+                email = RS.getString("EMAIL");
+                movie_id = RS.getString("MOVIE_ID");
+                quantity = RS.getInt("QUANTITY");
+                unit_price = RS.getFloat("UNIT_PRICE");
+                discount = RS.getFloat("DISCOUNT");
+                TransactionItemModel item = new TransactionItemModel(email, movie_id, quantity,
+                                                                        unit_price, discount, date);
                 // Title, backdrop, and poster are not required for what the order needs.
                 Items.add(item);
             }
@@ -226,6 +266,21 @@ public class utility {
             ServiceLogger.LOGGER.warning("Unable to track if item exists in the cart.");
         }
         return null; // return null means no problem, and therefore, no change in responseModel to return.
+    }
+
+    public static boolean movieIDInvalid(String movie_id) {
+        CartQuery CQ = new CartQuery();
+        ResultSet RS = CQ.sendQuery(CQ.buildMovieIDExiststenceQuery(movie_id));
+        try {
+            if (RS.next()) {
+                return false; // movie_id exists
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            ServiceLogger.LOGGER.warning("Unable to check if the movie ID exists in the database.");
+        }
+        return true; // movie_id does not exist
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -392,13 +447,13 @@ public class utility {
         return null;
     }
 
-    public static Json getOrder(String orderID, PayPalOrderClient orderClient)
+    public static Order getOrder(String orderID, PayPalOrderClient orderClient)
         throws IOException {
             OrdersGetRequest request = new OrdersGetRequest(orderID);
             HttpResponse<Order> response = orderClient.client.execute(request);
-            return new Json();
-            //ServiceLogger.LOGGER.info("Full response body:" +
-                   // new Json().serialize(response.result()));
+            //ServiceLogger.LOGGER.info("Full response body:" + new Json().serialize(response.result()));
+            return response.result();
+            //return new Json().serialize(response.result());
             // System.out.println(new JSONObject(new Json().serailize(
             //    response.result())).toString(4));
     }

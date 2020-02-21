@@ -118,8 +118,8 @@ public class OrderQuery {
         return ps;
     }
 
-    public PreparedStatement buildEmailToCaptureIDQuery(String email) {
-        String SELECT = "\nSELECT DISTINCT t.capture_id as capture_id\n";
+    public PreparedStatement buildEmailToTokenQuery(String email) {
+        String SELECT = "\nSELECT DISTINCT t.token as token\n";
         String FROM   = "FROM transaction as t\n";
         String JOIN   = "INNER JOIN sale as s\n" +
                         "    ON t.sale_id = s.sale_id\n";
@@ -134,7 +134,7 @@ public class OrderQuery {
         }
         catch (SQLException e) {
             e.printStackTrace();
-            ServiceLogger.LOGGER.warning("Unable to build query that gets capture_ids from email.");
+            ServiceLogger.LOGGER.warning("Unable to build query that gets token from email.");
         }
         return ps;
     }
@@ -145,6 +145,9 @@ public class OrderQuery {
     // table: 'sale' or 'transaction'
     public void sendUpdate(PreparedStatement ps, String call, String table) {
         try {
+            if (ps == null) {
+                return;
+            }
             ServiceLogger.LOGGER.info("Trying update: " + ps.toString());
             ps.executeUpdate();
             ServiceLogger.LOGGER.info("Query succeeded.");
@@ -186,8 +189,8 @@ public class OrderQuery {
         return null;
     }
 
-    // Sends queries to get capture_ids mapped by email
-    public ResultSet sendEmailToCaptureIDQuery(PreparedStatement ps) {
+    // Sends queries to get tokens mapped by email
+    public ResultSet sendEmailToTokenQuery(PreparedStatement ps) {
         try {
             ServiceLogger.LOGGER.info("Trying query: " + ps.toString());
             ResultSet rs = ps.executeQuery();

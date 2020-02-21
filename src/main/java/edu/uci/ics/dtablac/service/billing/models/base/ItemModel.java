@@ -34,7 +34,7 @@ public class ItemModel {
                      @JsonProperty(value = "discount", required = true) Float newDISCOUNT,
                      @JsonProperty(value = "quantity", required = true) Integer newQUANTITY,
                      @JsonProperty(value = "movie_id", required = true) String newMOVIE_ID,
-                     @JsonProperty(value = "movie_title", required = true) String newMOVIE_TITLE,
+                     @JsonProperty(value = "movie_title") String newMOVIE_TITLE,
                      @JsonProperty(value = "backdrop_path") String newBACKDROP_PATH,
                      @JsonProperty(value = "poster_path") String newPOSTER_PATH) {
         this.EMAIL = newEMAIL;

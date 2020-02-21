@@ -54,6 +54,12 @@ public class CartPage {
                 return utility.buildHeaderResponse(responseModel, EMAIL, SESSION_ID, TRANSACTION_ID);
             }
 
+            // Check if movie_id is valid
+            if (utility.movieIDInvalid(requestModel.getMOVIE_ID())) {
+                responseModel = new ResponseModel(Result.CART_OP_FAIL);
+                return utility.buildHeaderResponse(responseModel, EMAIL, SESSION_ID, TRANSACTION_ID);
+            }
+
             // Verify that customer is a registered user (privilege verification request)
             int privilegeRC = utility.checkPrivilege(requestModel.getEMAIL(), 4);
             if (privilegeRC == 14) { // Resultcode for a user not found.

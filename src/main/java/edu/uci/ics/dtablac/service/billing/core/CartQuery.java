@@ -117,9 +117,10 @@ public class CartQuery {
         String FROM   =   "FROM cart as c\n";
         String JOIN   =   "INNER JOIN movie_price AS mp\n"+
                           "    ON c.movie_id = mp.movie_id\n";
-        String WHERE  =   "WHERE c.email = ?;";
+        String WHERE  =   "WHERE c.email = ?\n";
+        String ORDER  =   "ORDER BY MOVIE_ID ASC;";
 
-        String query = SELECT + FROM + JOIN + WHERE;
+        String query = SELECT + FROM + JOIN + WHERE + ORDER;
 
         PreparedStatement ps = null;
         try {
@@ -129,6 +130,52 @@ public class CartQuery {
         catch (SQLException e) {
             e.printStackTrace();
             ServiceLogger.LOGGER.warning("Unable to build query to retrieve the user's cart.");
+        }
+        return ps;
+    }
+
+    // Use for transaction extraction
+    public PreparedStatement buildRetrieveSaleQuery(String email, String token) {
+        String SELECT = "\nSELECT s.email AS EMAIL, mp.unit_price AS UNIT_PRICE, mp.discount AS DISCOUNT,\n" +
+                        "         s.quantity AS QUANTITY, s.movie_id AS MOVIE_ID\n";
+        String FROM   =   "FROM sale as s\n";
+        String JOIN   =   "INNER JOIN transaction AS t\n"+
+                          "    ON s.sale_id = t.sale_id\n"+
+                          "INNER JOIN movie_price AS mp\n"+
+                          "    ON s.movie_id = mp.movie_id\n";
+        String WHERE  =   "WHERE s.email = ? && t.token = ?\n";
+        String ORDER  =   "ORDER BY MOVIE_ID ASC;";
+
+        String query = SELECT + FROM + JOIN + WHERE + ORDER;
+
+        PreparedStatement ps = null;
+        try {
+            ps = BillingService.getCon().prepareStatement(query);
+            ps.setString(1, email);
+            ps.setString(2, token);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            ServiceLogger.LOGGER.warning("Unable to build query that gets all movie sales of a transaction.");
+        }
+        return ps;
+    }
+
+    public PreparedStatement buildMovieIDExiststenceQuery(String movie_id) {
+        String SELECT = "\nSELECT *\n";
+        String FROM   = "FROM movie_price\n";
+        String WHERE  = "WHERE movie_id = ?";
+
+        String query = SELECT + FROM + WHERE;
+
+        PreparedStatement ps = null;
+        try {
+            ps = BillingService.getCon().prepareStatement(query);
+            ps.setString(1, movie_id);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            ServiceLogger.LOGGER.warning("Query failed: Unable to check if movie_id exists in the database.");
         }
         return ps;
     }
@@ -174,7 +221,7 @@ public class CartQuery {
         }
         catch (SQLException e) {
             e.printStackTrace();
-            ServiceLogger.LOGGER.warning("Query failed: Unable to retrieve cart.");
+            ServiceLogger.LOGGER.warning("Query failed: Unable to retrieve records.");
         }
         return null;
     }
