@@ -1,4 +1,4 @@
-package edu.uci.ics.UCNETID.service.billing.logger;
+package edu.uci.ics.dtablac.service.billing.logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

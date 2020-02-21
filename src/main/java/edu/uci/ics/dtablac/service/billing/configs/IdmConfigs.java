@@ -1,6 +1,6 @@
-package edu.uci.ics.UCNETID.service.billing.configs;
+package edu.uci.ics.dtablac.service.billing.configs;
 
-import edu.uci.ics.UCNETID.service.billing.logger.ServiceLogger;
+import edu.uci.ics.dtablac.service.billing.logger.ServiceLogger;
 
 public class IdmConfigs {
 

@@ -1,12 +1,12 @@
-package edu.uci.ics.UCNETID.service.billing;
+package edu.uci.ics.dtablac.service.billing;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import edu.uci.ics.UCNETID.service.billing.configs.ConfigsModel;
-import edu.uci.ics.UCNETID.service.billing.configs.IdmConfigs;
-import edu.uci.ics.UCNETID.service.billing.configs.MoviesConfigs;
-import edu.uci.ics.UCNETID.service.billing.configs.ServiceConfigs;
-import edu.uci.ics.UCNETID.service.billing.logger.ServiceLogger;
+import edu.uci.ics.dtablac.service.billing.configs.ConfigsModel;
+import edu.uci.ics.dtablac.service.billing.configs.IdmConfigs;
+import edu.uci.ics.dtablac.service.billing.configs.MoviesConfigs;
+import edu.uci.ics.dtablac.service.billing.configs.ServiceConfigs;
+import edu.uci.ics.dtablac.service.billing.logger.ServiceLogger;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.internal.util.ExceptionUtils;
@@ -23,7 +23,7 @@ import java.sql.SQLException;
 
 public class BillingService {
 
-    public static final String RESOURCE_PATH = "edu.uci.ics.UCNETID.service.billing.resources";
+    public static final String RESOURCE_PATH = "edu.uci.ics.dtablac.service.billing.resources";
 
     public static BillingService service;
     private static ServiceConfigs serviceConfigs;

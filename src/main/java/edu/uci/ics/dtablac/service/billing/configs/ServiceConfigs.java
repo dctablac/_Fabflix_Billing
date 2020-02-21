@@ -1,6 +1,6 @@
-package edu.uci.ics.UCNETID.service.billing.configs;
+package edu.uci.ics.dtablac.service.billing.configs;
 
-import edu.uci.ics.UCNETID.service.billing.logger.ServiceLogger;
+import edu.uci.ics.dtablac.service.billing.logger.ServiceLogger;
 
 public class ServiceConfigs {
 
@@ -13,7 +13,7 @@ public class ServiceConfigs {
     private final String DEFAULT_SCHEME = "http://";
     private final String DEFAULT_HOSTNAME = "0.0.0.0";
     private final int DEFAULT_PORT = 6243;
-    private final String DEFAULT_PATH = "/api/movies";
+    private final String DEFAULT_PATH = "/api/billing";
     // Default logger configs
     private final String DEFAULT_OUTPUTDIR = "./logs/";
     private final String DEFAULT_OUTPUTFILE = "test.log";

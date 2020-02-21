@@ -1,4 +1,4 @@
-package edu.uci.ics.UCNETID.service.billing.configs;
+package edu.uci.ics.dtablac.service.billing.configs;
 
 import java.util.Map;
 
