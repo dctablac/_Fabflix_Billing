@@ -1,10 +1,8 @@
 package edu.uci.ics.dtablac.service.billing.resources;
 
-import com.braintreepayments.http.serializer.Json;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paypal.orders.Item;
 import com.paypal.orders.Order;
 import edu.uci.ics.dtablac.service.billing.core.OrderQuery;
 import edu.uci.ics.dtablac.service.billing.logger.ServiceLogger;
@@ -26,8 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+
 
 @Path("order")
 public class OrderPage {
@@ -185,8 +182,12 @@ public class OrderPage {
             }
 
             // Iterable array of capture_ids
-            Object[] iterOrderID = order_ids.toArray();
-            int order_id_count = iterOrderID.length;
+            String[] iterOrderId = new String[order_ids.size()];
+            for ( int j = 0; j < order_ids.size(); j++) {
+                iterOrderId[j] = order_ids.get(j);
+            }
+            int order_id_count = iterOrderId.length;
+            ServiceLogger.LOGGER.warning("here.");
 
             // Declare fields for each TransactionModel
             AmountModel AMOUNT;
@@ -204,13 +205,17 @@ public class OrderPage {
             String CREATE_TIME;
             String UPDATE_TIME;
 
+            ServiceLogger.LOGGER.warning("here 2.");
             // Iterate through orders and parse information
             Order order;
             for (int i = 0; i < order_id_count; i++) {
-                order = utility.getOrder((String)iterOrderID[i], orderClient);
+                order = utility.getOrder(iterOrderId[i], orderClient);
+                if (order == null) {
+                    continue;
+                }
                 CAPTURE_ID = order.id();
                 STATE = order.status().toLowerCase();
-
+                System.err.println(order.purchaseUnits().get(0).payments());
                 AMOUNT_TOTAL = order.purchaseUnits().get(0).payments().captures().get(0).amount().value();
                 AMOUNT_CURRENCY = order.purchaseUnits().get(0).payments().captures().get(0).amount().currencyCode();
                 AMOUNT = new AmountModel(AMOUNT_TOTAL, AMOUNT_CURRENCY);
@@ -225,7 +230,7 @@ public class OrderPage {
                 UPDATE_TIME = order.purchaseUnits().get(0).payments().captures().get(0).updateTime();
 
                 // Get items of this order id
-                ITEMS = utility.getTransactionCartInfo(requestModel, iterOrderID[i].toString());
+                ITEMS = utility.getTransactionCartInfo(requestModel, iterOrderId[i]);
 
                 TransactionModel transaction = new TransactionModel(CAPTURE_ID, STATE, AMOUNT, TRANSACTION_FEE,
                                                                     CREATE_TIME, UPDATE_TIME, ITEMS);
@@ -247,6 +252,7 @@ public class OrderPage {
             ServiceLogger.LOGGER.warning("Error checking order_ids");
         }
         Object[] finalTransactions = transactions.toArray();
+        ServiceLogger.LOGGER.warning(finalTransactions.toString());
         responseModel = new TransactionResponseModel(Result.ORDER_RETRIEVE_SUCCESS, finalTransactions);
         return utility.buildHeaderResponse(responseModel, EMAIL, SESSION_ID, TRANSACTION_ID);
     }

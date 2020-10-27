@@ -1,0 +1,194 @@
+[2020/09/11 20:39:19][CONFIG][initService]  Starting service...
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Scheme: http://
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Hostname: 0.0.0.0
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Port: 12348
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Path: /api/billing
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Logger output directory: ./logs/
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Database hostname: localhost
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Database port: 3306
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Database username: root
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Database password provided? true
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Database name: fabflix_billing
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Database driver: com.mysql.cj.jdbc.Driver
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Database connection settings: ?autoReconnect=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=PST
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  IDM Scheme: http://
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  IDM Hostname: 0.0.0.0
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  IDM Port: 12346
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  IDM Path: /api/idm
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  IDM Privilege Path: /privilege
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Movies Scheme: http://
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Movies Hostname: 0.0.0.0
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Movies Port: 12347
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Movies Path: /api/movies
+[2020/09/11 20:39:19][CONFIG][currentConfigs]  Movies Thumbnail Path: /thumbnail
+[2020/09/11 20:39:19][CONFIG][connectToDatabase]  Connecting to database...
+[2020/09/11 20:39:19][CONFIG][connectToDatabase]  Database URL: jdbc:mysql://localhost:3306/fabflix_billing?autoReconnect=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=PST
+[2020/09/11 20:39:20][CONFIG][connectToDatabase]  Connected to database: jdbc:mysql://localhost:3306/fabflix_billing?autoReconnect=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=PST
+[2020/09/11 20:39:20][CONFIG][initHTTPServer]  Initializing HTTP server...
+[2020/09/11 20:39:20][CONFIG][initHTTPServer]  Building URI from configs...
+[2020/09/11 20:39:20][CONFIG][initHTTPServer]  Final URI: http://0.0.0.0:12348/api/billing
+[2020/09/11 20:39:20][CONFIG][initHTTPServer]  Set Jersey resources.
+[2020/09/11 20:39:20][CONFIG][initHTTPServer]  Set Jackson as serializer.
+[2020/09/11 20:39:20][CONFIG][initHTTPServer]  Starting HTTP server...
+[2020/09/11 20:39:20][CONFIG][initHTTPServer]  HTTP server started.
+[2020/09/11 20:39:20][CONFIG][initService]  Service initialized.
+[2020/09/11 20:41:14][INFO][getThumbnailInformation]  Building client...
+[2020/09/11 20:41:14][INFO][getThumbnailInformation]  Building WebTarget...
+[2020/09/11 20:41:14][INFO][getThumbnailInformation]  Starting invocation builder...
+[2020/09/11 20:41:14][INFO][getThumbnailInformation]  Sending request...
+[2020/09/11 20:41:14][INFO][getThumbnailInformation]  Request sent.
+[2020/09/11 20:41:14][INFO][getThumbnailInformation]  Received status 200
+[2020/09/11 20:41:14][INFO][getThumbnailInformation]  Successfully mapped response to POJO.
+[2020/09/11 20:45:50][INFO][getThumbnailInformation]  Building client...
+[2020/09/11 20:45:50][INFO][getThumbnailInformation]  Building WebTarget...
+[2020/09/11 20:45:50][INFO][getThumbnailInformation]  Starting invocation builder...
+[2020/09/11 20:45:50][INFO][getThumbnailInformation]  Sending request...
+[2020/09/11 20:45:50][INFO][getThumbnailInformation]  Request sent.
+[2020/09/11 20:45:50][INFO][getThumbnailInformation]  Received status 200
+[2020/09/11 20:45:50][INFO][getThumbnailInformation]  Successfully mapped response to POJO.
+[2020/09/11 20:45:59][INFO][sendQuery]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+SELECT *
+FROM cart
+WHERE email = 'dctablac@gmail.com' && movie_id = 'tt0118073';
+[2020/09/11 20:45:59][INFO][sendUpdate]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+DELETE
+FROM cart
+WHERE email = 'dctablac@gmail.com' && movie_id = 'tt0118073'
+[2020/09/11 20:45:59][INFO][sendUpdate]  Query succeeded.
+[2020/09/11 20:46:01][INFO][getThumbnailInformation]  Building client...
+[2020/09/11 20:46:01][INFO][getThumbnailInformation]  Building WebTarget...
+[2020/09/11 20:46:01][INFO][getThumbnailInformation]  Starting invocation builder...
+[2020/09/11 20:46:01][INFO][getThumbnailInformation]  Sending request...
+[2020/09/11 20:46:01][INFO][getThumbnailInformation]  Request sent.
+[2020/09/11 20:46:01][INFO][getThumbnailInformation]  Received status 200
+[2020/09/11 20:46:01][WARNING][getThumbnailInformation]  Unable to map response to POJO.
+[2020/09/11 20:46:14][INFO][insert]  This endpoint has email: dctablac@gmail.com
+[2020/09/11 20:46:14][INFO][sendQuery]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+SELECT *
+FROM movie_price
+WHERE movie_id = 'tt3748528'
+[2020/09/11 20:46:14][INFO][checkPrivilege]  Building client...
+[2020/09/11 20:46:14][INFO][checkPrivilege]  Building WebTarget...
+[2020/09/11 20:46:14][INFO][checkPrivilege]  Starting invocation builder...
+[2020/09/11 20:46:14][INFO][checkPrivilege]  Sending request...
+[2020/09/11 20:46:14][INFO][checkPrivilege]  Request sent.
+[2020/09/11 20:46:14][INFO][checkPrivilege]  Received status 200
+[2020/09/11 20:46:14][INFO][checkPrivilege]  Successfully mapped response to POJO.
+[2020/09/11 20:46:14][INFO][checkPrivilege]  Privilege resultCode: 141
+[2020/09/11 20:46:14][INFO][sendQuery]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+SELECT *
+FROM cart
+WHERE email = 'dctablac@gmail.com' && movie_id = 'tt3748528';
+[2020/09/11 20:46:14][INFO][sendUpdate]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+INSERT INTO cart (email, movie_id, quantity)
+VALUES ('dctablac@gmail.com', 'tt3748528', 1);
+[2020/09/11 20:46:14][INFO][sendUpdate]  Query succeeded.
+[2020/09/11 20:46:15][INFO][getThumbnailInformation]  Building client...
+[2020/09/11 20:46:15][INFO][getThumbnailInformation]  Building WebTarget...
+[2020/09/11 20:46:15][INFO][getThumbnailInformation]  Starting invocation builder...
+[2020/09/11 20:46:15][INFO][getThumbnailInformation]  Sending request...
+[2020/09/11 20:46:15][INFO][getThumbnailInformation]  Request sent.
+[2020/09/11 20:46:15][INFO][getThumbnailInformation]  Received status 200
+[2020/09/11 20:46:15][INFO][getThumbnailInformation]  Successfully mapped response to POJO.
+[2020/09/11 20:46:22][INFO][sendQuery]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+SELECT *
+FROM cart
+WHERE email = 'dctablac@gmail.com' && movie_id = 'tt3748528';
+[2020/09/11 20:46:22][INFO][sendUpdate]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+UPDATE cart
+SET quantity = 5
+WHERE email = 'dctablac@gmail.com' && movie_id = 'tt3748528';
+[2020/09/11 20:46:22][INFO][sendUpdate]  Query succeeded.
+[2020/09/11 20:46:22][INFO][getThumbnailInformation]  Building client...
+[2020/09/11 20:46:22][INFO][getThumbnailInformation]  Building WebTarget...
+[2020/09/11 20:46:22][INFO][getThumbnailInformation]  Starting invocation builder...
+[2020/09/11 20:46:22][INFO][getThumbnailInformation]  Sending request...
+[2020/09/11 20:46:22][INFO][getThumbnailInformation]  Request sent.
+[2020/09/11 20:46:22][INFO][getThumbnailInformation]  Received status 200
+[2020/09/11 20:46:22][INFO][getThumbnailInformation]  Successfully mapped response to POJO.
+[2020/09/11 20:46:45][INFO][insert]  This endpoint has email: dctablac@gmail.com
+[2020/09/11 20:46:45][INFO][sendQuery]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+SELECT *
+FROM movie_price
+WHERE movie_id = 'tt1345836'
+[2020/09/11 20:46:45][INFO][checkPrivilege]  Building client...
+[2020/09/11 20:46:45][INFO][checkPrivilege]  Building WebTarget...
+[2020/09/11 20:46:45][INFO][checkPrivilege]  Starting invocation builder...
+[2020/09/11 20:46:45][INFO][checkPrivilege]  Sending request...
+[2020/09/11 20:46:45][INFO][checkPrivilege]  Request sent.
+[2020/09/11 20:46:45][INFO][checkPrivilege]  Received status 200
+[2020/09/11 20:46:45][INFO][checkPrivilege]  Successfully mapped response to POJO.
+[2020/09/11 20:46:45][INFO][checkPrivilege]  Privilege resultCode: 141
+[2020/09/11 20:46:45][INFO][sendQuery]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+SELECT *
+FROM cart
+WHERE email = 'dctablac@gmail.com' && movie_id = 'tt1345836';
+[2020/09/11 20:46:45][INFO][sendUpdate]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+INSERT INTO cart (email, movie_id, quantity)
+VALUES ('dctablac@gmail.com', 'tt1345836', 1);
+[2020/09/11 20:46:45][INFO][sendUpdate]  Query succeeded.
+[2020/09/11 20:46:46][INFO][getThumbnailInformation]  Building client...
+[2020/09/11 20:46:46][INFO][getThumbnailInformation]  Building WebTarget...
+[2020/09/11 20:46:46][INFO][getThumbnailInformation]  Starting invocation builder...
+[2020/09/11 20:46:46][INFO][getThumbnailInformation]  Sending request...
+[2020/09/11 20:46:46][INFO][getThumbnailInformation]  Request sent.
+[2020/09/11 20:46:46][INFO][getThumbnailInformation]  Received status 200
+[2020/09/11 20:46:46][INFO][getThumbnailInformation]  Successfully mapped response to POJO.
+[2020/09/11 20:46:49][INFO][sendQuery]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+SELECT *
+FROM cart
+WHERE email = 'dctablac@gmail.com' && movie_id = 'tt1345836';
+[2020/09/11 20:46:49][INFO][sendUpdate]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+UPDATE cart
+SET quantity = 3
+WHERE email = 'dctablac@gmail.com' && movie_id = 'tt1345836';
+[2020/09/11 20:46:49][INFO][sendUpdate]  Query succeeded.
+[2020/09/11 20:46:50][INFO][getThumbnailInformation]  Building client...
+[2020/09/11 20:46:50][INFO][getThumbnailInformation]  Building WebTarget...
+[2020/09/11 20:46:50][INFO][getThumbnailInformation]  Starting invocation builder...
+[2020/09/11 20:46:50][INFO][getThumbnailInformation]  Sending request...
+[2020/09/11 20:46:50][INFO][getThumbnailInformation]  Request sent.
+[2020/09/11 20:46:50][INFO][getThumbnailInformation]  Received status 200
+[2020/09/11 20:46:50][INFO][getThumbnailInformation]  Successfully mapped response to POJO.
+[2020/09/11 20:46:58][INFO][sendQuery]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+SELECT *
+FROM cart
+WHERE email = 'dctablac@gmail.com' && movie_id = 'tt3748528';
+[2020/09/11 20:46:58][INFO][sendUpdate]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+DELETE
+FROM cart
+WHERE email = 'dctablac@gmail.com' && movie_id = 'tt3748528'
+[2020/09/11 20:46:58][INFO][sendUpdate]  Query succeeded.
+[2020/09/11 20:46:59][INFO][getThumbnailInformation]  Building client...
+[2020/09/11 20:46:59][INFO][getThumbnailInformation]  Building WebTarget...
+[2020/09/11 20:46:59][INFO][getThumbnailInformation]  Starting invocation builder...
+[2020/09/11 20:46:59][INFO][getThumbnailInformation]  Sending request...
+[2020/09/11 20:46:59][INFO][getThumbnailInformation]  Request sent.
+[2020/09/11 20:46:59][INFO][getThumbnailInformation]  Received status 200
+[2020/09/11 20:46:59][INFO][getThumbnailInformation]  Successfully mapped response to POJO.
+[2020/09/11 20:47:14][INFO][sendEmailToTokenQuery]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+SELECT DISTINCT t.token as token
+FROM transaction as t
+INNER JOIN sale as s
+    ON t.sale_id = s.sale_id
+WHERE s.email = 'dctablac@gmail.com';
+[2020/09/11 20:47:14][INFO][sendEmailToTokenQuery]  Query succeeded.
+[2020/09/11 20:47:14][WARNING][retrieve]  here.
+[2020/09/11 20:47:14][WARNING][retrieve]  here 2.
+[2020/09/11 20:47:15][WARNING][retrieve]  here 3.
+[2020/09/11 20:47:15][WARNING][retrieve]  here 4.
+[2020/09/11 20:47:15][WARNING][retrieve]  here 5.
+[2020/09/11 20:47:15][WARNING][retrieve]  here 6.
+[2020/09/11 20:47:15][WARNING][retrieve]  here 7.
+[2020/09/11 20:47:15][INFO][sendQuery]  Trying query: com.mysql.cj.jdbc.ClientPreparedStatement: 
+SELECT s.email AS EMAIL, mp.unit_price AS UNIT_PRICE, mp.discount AS DISCOUNT,
+         s.quantity AS QUANTITY, s.movie_id AS MOVIE_ID
+FROM sale as s
+INNER JOIN transaction AS t
+    ON s.sale_id = t.sale_id
+INNER JOIN movie_price AS mp
+    ON s.movie_id = mp.movie_id
+WHERE s.email = 'dctablac@gmail.com' && t.token = '7LN919434U4599604'
+ORDER BY MOVIE_ID ASC;
+[2020/09/11 20:47:15][WARNING][retrieve]  final here.
+[2020/09/11 20:47:15][WARNING][retrieve]  [Ljava.lang.Object;@788f85c8

@@ -40,6 +40,7 @@ public class CartPage {
 
         // Get request headers
         String EMAIL = headers.getHeaderString("email");
+        ServiceLogger.LOGGER.info("This endpoint has email: "+EMAIL);
         String SESSION_ID = headers.getHeaderString("session_id");
         String TRANSACTION_ID = headers.getHeaderString("transaction_id");
 
@@ -51,6 +52,9 @@ public class CartPage {
             // Check if email header matches request model's email
             if (!utility.requestEmailMatchesHeader(requestModel.getEMAIL(), EMAIL)) {
                 responseModel = new ResponseModel(Result.CART_OP_FAIL);
+                ServiceLogger.LOGGER.info("Email mismatch");
+                ServiceLogger.LOGGER.info("Request model email: "+requestModel.getEMAIL());
+                ServiceLogger.LOGGER.info("Header email: "+EMAIL);
                 return utility.buildHeaderResponse(responseModel, EMAIL, SESSION_ID, TRANSACTION_ID);
             }
 

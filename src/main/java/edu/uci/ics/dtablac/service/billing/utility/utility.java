@@ -353,7 +353,7 @@ public class utility {
 
         // Create application context // These will be changed with the front end.
         ApplicationContext applicationContext = new
-                ApplicationContext().returnUrl("http://localhost:12345/api/billing/order/complete")
+                ApplicationContext().returnUrl("http://localhost:3000/ordercomplete")
                                     .cancelUrl("http://localhost:12345/api/billing/test/hello");
         // ReturnUrl is the location where the user will be redirected after payment completion.
         // CancelUrl is the location a user is redirected after canceling an order.
